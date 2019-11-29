@@ -14,11 +14,11 @@ function decodeBase64Cert(cert) {
     return decodeBinCert(der)
 }
 
-const cert = FS.readFileSync('testBin.cer')
-const certificate = decodeBinCert(cert);
+//const cert = FS.readFileSync('testBin.cer')
+//const certificate = decodeBinCert(cert);
 
-//const cert = FS.readFileSync('testBase64.cer').toString();
-//const certificate = decodeBase64Cert(cert);
+const cert = FS.readFileSync('testBase64.cer').toString();
+const certificate = decodeBase64Cert(cert);
 
 
 const rdnmap = {

@@ -2,15 +2,24 @@ const Pkijs = require('pkijs')
 const Asn1js = require('asn1js')
 const FS = require('fs')
 
-const cert = FS.readFileSync('ilis.cer').toString()
-
-function decodeCert(pem) {
-    const b64 = cert.replace(/(-----(BEGIN|END) CERTIFICATE-----|[\n\r])/g, '')
-    const der = Buffer(b64, 'base64')
+function decodeBinCert(der) {
     const ber = new Uint8Array(der).buffer
     const asn1 = Asn1js.fromBER(ber)
     return new Pkijs.Certificate({ schema: asn1.result })
 }
+
+function decodeBase64Cert(cert) {
+    const b64 = cert.replace(/(-----(BEGIN|END) CERTIFICATE-----|[\n\r])/g, '')
+    const der = Buffer(b64, 'base64')
+    return decodeBinCert(der)
+}
+
+//const cert = FS.readFileSync('testBin.cer')
+//const certificate = decodeBinCert(cert);
+
+const cert = FS.readFileSync('testBase64.cer').toString();
+const certificate = decodeBase64Cert(cert);
+
 
 const rdnmap = {
     "2.5.4.6": "C",
@@ -25,8 +34,6 @@ const rdnmap = {
     "2.5.4.4": "SN",
     "1.2.840.113549.1.9.1": "E-mail"
 };
-
-const certificate = decodeCert(cert);
 
 for(const typeAndValue of certificate.issuer.typesAndValues)
 {
@@ -45,7 +52,8 @@ for(const typeAndValue of certificate.subject.typesAndValues)
 		typeval = typeAndValue.type;
 		
 	const subjval = typeAndValue.value.valueBlock.value;
-	console.log(typeval +'='+ subjval);
+    console.log(typeval +'='+ subjval);
+    
 }
 
 function bufferToHex (buffer) {

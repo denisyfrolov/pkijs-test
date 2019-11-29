@@ -14,11 +14,11 @@ function decodeBase64Cert(cert) {
     return decodeBinCert(der)
 }
 
-//const cert = FS.readFileSync('testBin.cer')
-//const certificate = decodeBinCert(cert);
+const cert = FS.readFileSync('testBin.cer')
+const certificate = decodeBinCert(cert);
 
-const cert = FS.readFileSync('testBase64.cer').toString();
-const certificate = decodeBase64Cert(cert);
+//const cert = FS.readFileSync('testBase64.cer').toString();
+//const certificate = decodeBase64Cert(cert);
 
 
 const rdnmap = {
@@ -59,8 +59,8 @@ for(const typeAndValue of certificate.subject.typesAndValues)
 function bufferToHex (buffer) {
     return Array
         .from (new Uint8Array (buffer))
-        .map (b => b.toString (16).padStart (2, "0"))
-        .join (" ");
+        .map (b => b.toString (16).padStart (2, "0").toUpperCase())
+        .join ("-");
 }
 
 console.log(bufferToHex(certificate.subjectPublicKeyInfo.subjectPublicKey.valueBlock.valueHex));
